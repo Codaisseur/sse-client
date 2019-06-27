@@ -3,7 +3,6 @@
 import React from 'react'
 
 class App extends React.Component {
-
   componentDidMount () {
     const source = new EventSource('http://localhost:5000/stream')
     source.onmessage = (event) => {
