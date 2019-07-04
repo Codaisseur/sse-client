@@ -1,24 +1,19 @@
 /* global EventSource */
 
 import React from 'react'
+import { connect } from 'react-redux'
+import { onEvent } from './actions/messages'
 
 class App extends React.Component {
-  state = { messages: [] }
-
   source = new EventSource('http://localhost:5000/stream')
 
   componentDidMount () {
-    this.source.onmessage = (event) => {
-      const { data } = event
-      const messages = JSON.parse(data)
-      console.log('messages test:', messages)
-      this.setState({ messages })
-    }
+    this.source.onmessage = this.props.onEvent
   }
 
   render () {
     return this
-      .state
+      .props
       .messages
       .map((message, index) => <p key={index}>
         {message}
@@ -26,4 +21,15 @@ class App extends React.Component {
   }
 }
 
-export default App
+function mapStateToProps (state) {
+  return {
+    messages: state.messages
+  }
+}
+
+const mapDispatchToProps = { onEvent }
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App)
